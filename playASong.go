@@ -8,14 +8,18 @@ import (
 )
 
 func playASong(songs []string) {
-	rand.Seed(time.Now().Unix())
-
 	for {
+		rand.Seed(time.Now().Unix())
 		randomIndex := rand.Intn(len(songs))
 		currentSong = songs[randomIndex]
-		log.Println("Now playing: " + currentSong)
+		// hang out and do nothing if we aren't playing
+		if !isPlaying {
+			mpgCmd = exec.Command("sleep", "0.5")
+		} else {
+			mpgCmd = exec.Command("mpg123", musicDir+"/"+currentSong)
+			log.Println("Now playing: " + currentSong)
+		}
 
-		mpgCmd = exec.Command("mpg123", musicDir+"/"+currentSong)
 		mpgCmd.Run()
 	}
 }

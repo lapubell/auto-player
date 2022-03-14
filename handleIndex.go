@@ -1,34 +1,33 @@
 package main
 
 import (
+	_ "embed"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
-var html string = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+//go:embed index.html
+var html string
 
-	<style>
-	body {background: black;}
-	* {color: white;}
-	</style>
-</head>
-<body>
-
-%%CURRENT%%
-<a href='/skip'>Next Track</a>
-
-</body>
-</html>
-`
+//go:embed kiddo.svg
+var kiddo string
 
 func handleIndex(w http.ResponseWriter, r *http.Request) {
-	output := strings.ReplaceAll(html, "%%CURRENT%%", "<h1>Now Playing: "+currentSong+"</h1>")
+	// start with the embeded HTML
+	output := html
+	output = strings.ReplaceAll(output, "%%VOLUME%%", strconv.Itoa(volume))
+
+	output = strings.ReplaceAll(output, "%%KIDDO%%", kiddo)
+	if !isPlaying {
+		output = strings.ReplaceAll(output, "%%CURRENT%%", "")
+		output = strings.ReplaceAll(output, "%%START_DISPLAY%%", "flex")
+		output = strings.ReplaceAll(output, "%%STOP_DISPLAY%%", "none")
+	} else {
+		output = strings.ReplaceAll(output, "%%CURRENT%%", currentSong)
+		output = strings.ReplaceAll(output, "%%START_DISPLAY%%", "none")
+		output = strings.ReplaceAll(output, "%%STOP_DISPLAY%%", "flex")
+	}
+
 	w.Write([]byte(output))
 }

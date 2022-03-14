@@ -2,7 +2,8 @@ package main
 
 import "net/http"
 
-func handleSkip(w http.ResponseWriter, r *http.Request) {
+func handleStop(w http.ResponseWriter, r *http.Request) {
+	isPlaying = false
 	mpgCmd.Process.Kill()
 
 	http.Redirect(w, r, "/", 302)

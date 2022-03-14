@@ -1,6 +1,7 @@
 #! /usr/bin/bash
 
 # kill any running processes
+killall mpg123
 killall auto-player
 
 # build for CHIP

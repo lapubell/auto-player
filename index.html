@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        /* http://meyerweb.com/eric/tools/css/reset/
+        v2.0 | 20110126
+        License: none (public domain)
+        */
+        html,
+        body,
+        div,
+        span,
+        applet,
+        object,
+        iframe,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        blockquote,
+        pre,
+        a,
+        abbr,
+        acronym,
+        address,
+        big,
+        cite,
+        code,
+        del,
+        dfn,
+        em,
+        img,
+        ins,
+        kbd,
+        q,
+        s,
+        samp,
+        small,
+        strike,
+        strong,
+        sub,
+        sup,
+        tt,
+        var,
+        b,
+        u,
+        i,
+        center,
+        dl,
+        dt,
+        dd,
+        ol,
+        ul,
+        li,
+        fieldset,
+        form,
+        label,
+        legend,
+        table,
+        caption,
+        tbody,
+        tfoot,
+        thead,
+        tr,
+        th,
+        td,
+        article,
+        aside,
+        canvas,
+        details,
+        embed,
+        figure,
+        figcaption,
+        footer,
+        header,
+        hgroup,
+        menu,
+        nav,
+        output,
+        ruby,
+        section,
+        summary,
+        time,
+        mark,
+        audio,
+        video {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 100%;
+            font: inherit;
+            vertical-align: baseline;
+        }
+
+        /* HTML5 display-role reset for older browsers */
+        article,
+        aside,
+        details,
+        figcaption,
+        figure,
+        footer,
+        header,
+        hgroup,
+        menu,
+        nav,
+        section {
+            display: block;
+        }
+
+        body {
+            line-height: 1;
+        }
+
+        ol,
+        ul {
+            list-style: none;
+        }
+
+        blockquote,
+        q {
+            quotes: none;
+        }
+
+        blockquote:before,
+        blockquote:after,
+        q:before,
+        q:after {
+            content: '';
+            content: none;
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        body {
+            background: black;
+        }
+
+        * {
+            color: white;
+        }
+
+        h1 {
+            font-size: 1.25rem;
+            font-family: sans-serif;
+        }
+
+        h1 span {
+            font-size: 2rem;
+            display: block;
+        }
+
+        a {
+            display: block;
+            border: 1px solid white;
+            background-color: lightgrey;
+            padding: 5px 15px;
+            margin-bottom: 1rem;
+            height: 50px;
+        }
+
+        a svg {
+            fill: black;
+        }
+
+        .d-flex {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .justify-content-between {
+            justify-content: space-between;
+        }
+
+        .column {
+            flex-direction: column;
+        }
+
+        .column-reverse {
+            flex-direction: column-reverse;
+        }
+
+        .p-1 {
+            padding: 1rem;
+        }
+
+        #play-button {
+            display: %%START_DISPLAY%%;
+        }
+
+        #stop-button {
+            display: %%STOP_DISPLAY%%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="d-flex justify-content-between">
+
+        <div class="d-flex column justify-content-between p-1" style="height: calc(100vh - 100px);">
+            <div class="d-flex column-reverse">
+                <h1>Now Playing:<span>%%CURRENT%%</span></h1>
+                %%KIDDO%%
+            </div>
+
+            <div class="d-flex">
+                <a href='/skip' style="flex-grow: 1;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                padding: 0;
+                justify-content: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                </svg>
+                </a>
+
+                <a href='/play' id="play-button" style="flex-grow: 1;
+                text-align: center;
+                align-items: center;
+                padding: 0;
+                justify-content: center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" style="width: 2rem; height: 2rem;" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                        <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                    </svg>
+                </a>
+
+                <a href='/stop' id="stop-button" style="flex-grow: 1;
+                text-align: center;
+                align-items: center;
+                padding: 0;
+                justify-content: center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-square-fill" viewBox="0 0 16 16">
+                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2z"/>
+                    </svg>
+                </a>
+
+                <div class="d-flex column">
+                    <!-- <a href='/volume-up'>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-volume-down" viewBox="0 0 16 16">
+                            <path d="M9 4a.5.5 0 0 0-.812-.39L5.825 5.5H3.5A.5.5 0 0 0 3 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 9 12V4zM6.312 6.39 8 5.04v5.92L6.312 9.61A.5.5 0 0 0 6 9.5H4v-3h2a.5.5 0 0 0 .312-.11zM12.025 8a4.486 4.486 0 0 1-1.318 3.182L10 10.475A3.489 3.489 0 0 0 11.025 8 3.49 3.49 0 0 0 10 5.525l.707-.707A4.486 4.486 0 0 1 12.025 8z"/>
+                        </svg>
+                    </a>
+
+                    <a href='/volume-down'>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-volume-down" viewBox="0 0 16 16">
+                            <path d="M9 4a.5.5 0 0 0-.812-.39L5.825 5.5H3.5A.5.5 0 0 0 3 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 9 12V4zM6.312 6.39 8 5.04v5.92L6.312 9.61A.5.5 0 0 0 6 9.5H4v-3h2a.5.5 0 0 0 .312-.11zM12.025 8a4.486 4.486 0 0 1-1.318 3.182L10 10.475A3.489 3.489 0 0 0 11.025 8 3.49 3.49 0 0 0 10 5.525l.707-.707A4.486 4.486 0 0 1 12.025 8z"/>
+                        </svg>
+                    </a> -->
+                </div>
+
+            </div>
+        </div>
+
+        <div class="d-flex" style="width: 50px;justify-content: center;align-items: center;">
+            <input
+                orient="vertical"
+                type="range"
+                id="volume"
+                min="0"
+                value="%%VOLUME%%"
+                max="100"
+                step="5"
+                style="-webkit-appearance: slider-vertical;
+                width: 20px;
+                height: calc(100vh - 100px);"
+                />
+        </div>
+    </div>
+
+</body>
+
+<script>
+volume.onchange = function() {
+    window.location.href = "/volume?value="+this.value;
+}
+</script>
+
+</html>
