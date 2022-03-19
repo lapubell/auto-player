@@ -12,10 +12,12 @@ import (
 )
 
 var musicDir string
+var songs []string
 var currentSong string
 var mpgCmd *exec.Cmd
 var amixerID string
-var isPlaying bool = false
+var isPlaying bool
+var isBabySafe bool = true
 var volume int
 
 func main() {
@@ -39,7 +41,7 @@ func main() {
 
 	volumeString := os.Getenv("VOLUME")
 	if volumeString == "" {
-		volumeString = "0"
+		volumeString = "10"
 	}
 	volumeInt, err := strconv.Atoi(volumeString)
 	if err != nil {
@@ -47,26 +49,29 @@ func main() {
 	}
 	volume = volumeInt
 
-	files, err := os.ReadDir(musicDir)
-	if err != nil {
-		log.Fatal(err)
+	autoPlayingString := os.Getenv("AUTO_PLAY")
+	if autoPlayingString == "true" {
+		isPlaying = true
+	} else {
+		isPlaying = false
 	}
 
-	songs := []string{}
-	for _, f := range files {
-		songs = append(songs, f.Name())
+	songs, err = setMusicList()
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	// set the volume on boot
 	updatePlayerVolume()
 
 	// go routine for the audio player (command launcher)
-	go playASong(songs)
+	go playASong()
 
 	http.HandleFunc("/", handleIndex)
 	http.HandleFunc("/skip", handleSkip)
 	http.HandleFunc("/stop", handleStop)
 	http.HandleFunc("/play", handlePlay)
 	http.HandleFunc("/volume", handleVolume)
+	http.HandleFunc("/switch", handleSwitch)
 	log.Fatal(http.ListenAndServe(":"+webPort, nil))
 }
