@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os/exec"
 	"strconv"
 )
@@ -11,6 +10,6 @@ func updatePlayerVolume() {
 	volumeCommand := exec.Command("amixer", "sset", amixerID, strconv.Itoa(volume))
 	err := volumeCommand.Run()
 	if err != nil {
-		fmt.Println(err.Error())
+		// fmt.Println(err.Error())
 	}
 }

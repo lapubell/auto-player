@@ -7,11 +7,11 @@ import (
 	"os/exec"
 	"strconv"
 
-	"github.com/joho/godotenv"
 	_ "github.com/joho/godotenv/autoload"
 )
 
 var musicDir string
+var currentSongIndex int = 0 // this will be whichever song we are playing
 var songs []string
 var currentSong string
 var mpgCmd *exec.Cmd
@@ -19,10 +19,9 @@ var amixerID string
 var isPlaying bool
 var isBabySafe bool = true
 var volume int
+var maxVolume int
 
 func main() {
-	godotenv.Load("/etc/server-run.env")
-
 	// setup
 	musicDir = os.Getenv("MUSIC_DIRECTORY")
 	if musicDir == "" {
@@ -48,6 +47,16 @@ func main() {
 		volume = 0
 	}
 	volume = volumeInt
+
+	maxVolumeString := os.Getenv("MAX_VOLUME")
+	if maxVolumeString == "" {
+		maxVolumeString = "63"
+	}
+	maxVolumeInt, err := strconv.Atoi(maxVolumeString)
+	if err != nil {
+		maxVolumeInt = 0
+	}
+	maxVolume = maxVolumeInt
 
 	autoPlayingString := os.Getenv("AUTO_PLAY")
 	if autoPlayingString == "true" {

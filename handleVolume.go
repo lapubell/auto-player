@@ -16,5 +16,5 @@ func handleVolume(w http.ResponseWriter, r *http.Request) {
 	volume = newVolumeInt
 	updatePlayerVolume()
 
-	http.Redirect(w, r, "/", 302)
+	http.Redirect(w, r, "/", http.StatusFound)
 }

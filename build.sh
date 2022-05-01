@@ -5,7 +5,7 @@ killall mpg123
 killall auto-player
 
 # build for CHIP
-GOOS=linux GOARCH=arm go build -o auto-player-chip
+GOOS=linux GOARCH=arm go build -ldflags "-s -w" -o auto-player-chip
 
 # build for local and gimmie the terminal back
 go build

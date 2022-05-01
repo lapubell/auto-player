@@ -6,5 +6,5 @@ func handlePlay(w http.ResponseWriter, r *http.Request) {
 	isPlaying = true
 	mpgCmd.Process.Kill()
 
-	http.Redirect(w, r, "/", 302)
+	http.Redirect(w, r, "/", http.StatusFound)
 }

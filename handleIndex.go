@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 )
 
 //go:embed index.html
@@ -17,9 +18,12 @@ var kiddo string
 var parents string
 
 func handleIndex(w http.ResponseWriter, r *http.Request) {
+	time.Sleep(time.Millisecond * 100) // short pause because concurrancy and I'm lazy
+
 	// start with the embeded HTML
 	output := html
 	output = strings.ReplaceAll(output, "%%VOLUME%%", strconv.Itoa(volume))
+	output = strings.ReplaceAll(output, "%%MAX_VOLUME%%", strconv.Itoa(maxVolume))
 
 	output = strings.ReplaceAll(output, "%%KIDDO%%", kiddo)
 	output = strings.ReplaceAll(output, "%%PARENTS%%", parents)
