@@ -3,8 +3,8 @@ package main
 import "net/http"
 
 func handlePlay(w http.ResponseWriter, r *http.Request) {
-	isPlaying = true
+	currentState.IsPlaying = true
 	mpgCmd.Process.Kill()
 
-	http.Redirect(w, r, "/", http.StatusFound)
+	getState(w)
 }

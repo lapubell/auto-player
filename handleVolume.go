@@ -11,10 +11,10 @@ func handleVolume(w http.ResponseWriter, r *http.Request) {
 
 	newVolumeInt, err := strconv.Atoi(newVolumeString)
 	if err != nil {
-		volume = 0
+		currentState.Volume = 0
 	}
-	volume = newVolumeInt
+	currentState.Volume = newVolumeInt
 	updatePlayerVolume()
 
-	http.Redirect(w, r, "/", http.StatusFound)
+	getState(w)
 }

@@ -1,10 +1,12 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+)
 
 func handleStop(w http.ResponseWriter, r *http.Request) {
-	isPlaying = false
+	currentState.IsPlaying = false
 	mpgCmd.Process.Kill()
 
-	http.Redirect(w, r, "/", http.StatusFound)
+	getState(w)
 }

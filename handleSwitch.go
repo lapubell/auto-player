@@ -1,23 +1,40 @@
 package main
 
-import "net/http"
+import (
+	"fmt"
+	"net/http"
+	"time"
+)
 
 func handleSwitch(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	newTypeString := r.FormValue("type")
 
+	// sound effects
+	if newTypeString == "waves" {
+		currentState.IsBabySafe = true
+		currentState.Mode = "waves"
+	}
+	if newTypeString == "music" {
+		currentState.IsBabySafe = true
+		currentState.Mode = "music"
+	}
 	if newTypeString == "baby" {
-		isBabySafe = true
-		musicDir = "/music"
+		currentState.IsBabySafe = true
+		currentState.Mode = "music"
 	}
 	if newTypeString == "grown-ups" {
-		isBabySafe = false
-		musicDir = "/grown-ups"
+		currentState.IsBabySafe = false
+		currentState.Mode = "music"
 	}
 
-	isPlaying = false
-	setMusicList()
-	mpgCmd.Process.Kill()
+	currentState.IsPlaying = false
+	currentState.setMusicList()
 
-	http.Redirect(w, r, "/", http.StatusFound)
+	mpgCmd.Process.Kill()
+	time.Sleep(500 * time.Millisecond)
+
+	fmt.Println(currentState)
+
+	getState(w)
 }

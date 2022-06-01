@@ -8,166 +8,150 @@
     <title>Radio Ga Ga</title>
 
     <style>
-         /* http://meyerweb.com/eric/tools/css/reset/
-        v2.0 | 20110126
-        License: none (public domain)
-        */
-        a,abbr,acronym,address,applet,article,aside,audio,b,big,blockquote,body,canvas,caption,center,cite,code,dd,del,details,dfn,div,dl,dt,em,embed,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,html,i,iframe,img,ins,kbd,label,legend,li,mark,menu,nav,object,ol,output,p,pre,q,ruby,s,samp,section,small,span,strike,strong,sub,summary,sup,table,tbody,td,tfoot,th,thead,time,tr,tt,u,ul,var,video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}
-
-        /* HTML5 display-role reset for older browsers */
-        article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}
-        body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:after,blockquote:before,q:after,q:before{content:'';content:none}table{border-collapse:collapse;border-spacing:0}
-
-        body {
-            background: black;
-        }
-
-        * {
-            color: white;
-        }
-
-        h1 {
-            font-size: 1.25rem;
-            font-family: sans-serif;
-        }
-
-        h1 span {
-            font-size: 2rem;
-            display: block;
-        }
-
-        a {
-            display: block;
-            border: 1px solid white;
-            background-color: lightgrey;
-            padding: 5px 15px;
-            margin-bottom: 1rem;
-            height: 50px;
-        }
-
-        a svg {
-            fill: black;
-        }
-
-        a.library-switcher {
-            background-color: transparent;
-            border: 0;
-            height: auto;
-        }
-
-        a.baby-image {
-            display: %%BABY_DISPAY%%;
-        }
-
-        a.family-image {
-            display: %%PARENT_DISPAY%%;
-        }
-
-        .d-flex {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .justify-content-between {
-            justify-content: space-between;
-        }
-
-        .column {
-            flex-direction: column;
-        }
-
-        .column-reverse {
-            flex-direction: column-reverse;
-        }
-
-        .p-1 {
-            padding: 1rem;
-        }
-
-        #play-button {
-            display: %%START_DISPLAY%%;
-        }
-
-        #stop-button {
-            display: %%STOP_DISPLAY%%;
-        }
+        /*STYLECSS*/
     </style>
+
+    <script>
+        /*VUEJS*/
+    </script>
 </head>
 
 <body>
 
-    <div class="d-flex justify-content-between">
-
-        <div class="d-flex column justify-content-between p-1" style="height: calc(100vh - 100px);">
+    <div class="d-flex justify-content-between" id="app">
+        <div class="d-flex column justify-content-between p-1" style="height: calc(100vh - 100px); flex-grow: 1;">
             <div class="d-flex column-reverse">
-                <h1>Now Playing:<span>%%CURRENT%%</span></h1>
+                <div>
+                    <h1>Now Playing:
+                        <span v-html="NowPlaying"></span>
+                    </h1>
+                    <div class="mt-1">
+                        <p>Albums:</p>
 
-                <a class="library-switcher baby-image" href="/switch?type=grown-ups">
+                        <select style="color: black;" @change="setAlbum" v-model="currentAlbum">
+                            <option
+                                style="color: black;"
+                                v-for="(album, index) in Albums"
+                                :value="album"
+                                >{{ album }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <a
+                    v-if="IsBabySafe"
+                    href="#"
+                    @click.prevent="switchType"
+                    class="library-switcher family-image">
                     %%KIDDO%%
                 </a>
 
-                <a class="library-switcher family-image" href="/switch?type=baby">
+                <a
+                    v-else
+                    href="#"
+                    @click.prevent="switchType"
+                    class="library-switcher baby-image"
+                    >
                     %%PARENTS%%
                 </a>
             </div>
 
             <div class="d-flex">
-                <a href='/skip' style="flex-grow: 1;
-                text-align: center;
-                display: flex;
-                align-items: center;
-                padding: 0;
-                justify-content: center;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
-                </svg>
-                </a>
-
-                <a href='/play' id="play-button" style="flex-grow: 1;
-                text-align: center;
-                align-items: center;
-                padding: 0;
-                justify-content: center;">
-                    <svg xmlns="http://www.w3.org/2000/svg" style="width: 2rem; height: 2rem;" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
-                        <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                <!-- next track -->
+                <a
+                    @click.prevent="skip"
+                    href='#'
+                    class="media-button"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-skip-forward-fill" viewBox="0 0 16 16">
+                        <path d="M15.5 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V8.753l-6.267 3.636c-.54.313-1.233-.066-1.233-.697v-2.94l-6.267 3.636C.693 12.703 0 12.324 0 11.693V4.308c0-.63.693-1.01 1.233-.696L7.5 7.248v-2.94c0-.63.693-1.01 1.233-.696L15 7.248V4a.5.5 0 0 1 .5-.5z"/>
                     </svg>
                 </a>
 
-                <a href='/stop' id="stop-button" style="flex-grow: 1;
-                text-align: center;
-                align-items: center;
-                padding: 0;
-                justify-content: center;">
+                <!-- MUSIC VS. SOUND EFFECT -->
+                <template v-if="IsBabySafe">
+                    <a
+                        v-if="Mode === 'music'"
+                        @click.prevent="switchMode"
+                        href="#"
+                        class="media-button"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-music-note-beamed" viewBox="0 0 16 16">
+                            <path d="M6 13c0 1.105-1.12 2-2.5 2S1 14.105 1 13c0-1.104 1.12-2 2.5-2s2.5.896 2.5 2zm9-2c0 1.105-1.12 2-2.5 2s-2.5-.895-2.5-2 1.12-2 2.5-2 2.5.895 2.5 2z"/>
+                            <path fill-rule="evenodd" d="M14 11V2h1v9h-1zM6 3v10H5V3h1z"/>
+                            <path d="M5 2.905a1 1 0 0 1 .9-.995l8-.8a1 1 0 0 1 1.1.995V3L5 4V2.905z"/>
+                        </svg>
+                    </a>
+                    <a
+                        v-else
+                        @click.prevent="switchMode"
+                        href="#"
+                        class="media-button"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tsunami" viewBox="0 0 16 16">
+                            <path d="M.036 12.314a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.757-.703a.5.5 0 0 1-.278-.65zm0 2a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.757-.703a.5.5 0 0 1-.278-.65zM2.662 8.08c-.456 1.063-.994 2.098-1.842 2.804a.5.5 0 0 1-.64-.768c.652-.544 1.114-1.384 1.564-2.43.14-.328.281-.68.427-1.044.302-.754.624-1.559 1.01-2.308C3.763 3.2 4.528 2.105 5.7 1.299 6.877.49 8.418 0 10.5 0c1.463 0 2.511.4 3.179 1.058.67.66.893 1.518.819 2.302-.074.771-.441 1.516-1.02 1.965a1.878 1.878 0 0 1-1.904.27c-.65.642-.907 1.679-.71 2.614C11.076 9.215 11.784 10 13 10h2.5a.5.5 0 0 1 0 1H13c-1.784 0-2.826-1.215-3.114-2.585-.232-1.1.005-2.373.758-3.284L10.5 5.06l-.777.388a.5.5 0 0 1-.447 0l-1-.5a.5.5 0 0 1 .447-.894l.777.388.776-.388a.5.5 0 0 1 .447 0l1 .5a.493.493 0 0 1 .034.018c.44.264.81.195 1.108-.036.328-.255.586-.729.637-1.27.05-.529-.1-1.076-.525-1.495-.426-.42-1.19-.77-2.477-.77-1.918 0-3.252.448-4.232 1.123C5.283 2.8 4.61 3.738 4.07 4.79c-.365.71-.655 1.433-.945 2.16-.15.376-.301.753-.463 1.13z"/>
+                        </svg>
+                    </a>
+                </template>
+
+                <!-- TOGGLE RANDOM -->
+                <a
+                    v-if="IsRandomMode"
+                    @click.prevent="toggleRandom"
+                    href="#"
+                    class="media-button"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shuffle" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.624 9.624 0 0 0 7.556 8a9.624 9.624 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.595 10.595 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.624 9.624 0 0 0 6.444 8a9.624 9.624 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5z"/>
+                        <path d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192zm0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192z"/>
+                    </svg>
+                </a>
+                <a
+                    v-else
+                    @click.prevent="toggleRandom"
+                    href="#"
+                    class="media-button"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                    </svg>
+                </a>
+
+                <a
+                    v-if="IsPlaying"
+                    href='#'
+                    @click.prevent="stop"
+                    class="media-button"
+                >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-square-fill" viewBox="0 0 16 16">
                         <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2z"/>
                     </svg>
                 </a>
 
-                <div class="d-flex column">
-                    <!-- <a href='/volume-up'>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-volume-down" viewBox="0 0 16 16">
-                            <path d="M9 4a.5.5 0 0 0-.812-.39L5.825 5.5H3.5A.5.5 0 0 0 3 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 9 12V4zM6.312 6.39 8 5.04v5.92L6.312 9.61A.5.5 0 0 0 6 9.5H4v-3h2a.5.5 0 0 0 .312-.11zM12.025 8a4.486 4.486 0 0 1-1.318 3.182L10 10.475A3.489 3.489 0 0 0 11.025 8 3.49 3.49 0 0 0 10 5.525l.707-.707A4.486 4.486 0 0 1 12.025 8z"/>
-                        </svg>
-                    </a>
-
-                    <a href='/volume-down'>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-volume-down" viewBox="0 0 16 16">
-                            <path d="M9 4a.5.5 0 0 0-.812-.39L5.825 5.5H3.5A.5.5 0 0 0 3 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 9 12V4zM6.312 6.39 8 5.04v5.92L6.312 9.61A.5.5 0 0 0 6 9.5H4v-3h2a.5.5 0 0 0 .312-.11zM12.025 8a4.486 4.486 0 0 1-1.318 3.182L10 10.475A3.489 3.489 0 0 0 11.025 8 3.49 3.49 0 0 0 10 5.525l.707-.707A4.486 4.486 0 0 1 12.025 8z"/>
-                        </svg>
-                    </a> -->
-                </div>
-
+                <a
+                    v-else
+                    href='#'
+                    @click.prevent="play" style="flex-grow: 1;
+                text-align: center;
+                align-items: center;
+                padding: 0;
+                display: flex;
+                justify-content: center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" style="width: 2rem; height: 2rem;" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                        <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                    </svg>
+                </a>
             </div>
         </div>
 
         <div class="d-flex" style="width: 50px;justify-content: center;align-items: center;">
             <input
+                v-model="Volume"
+                @change="setVolume"
+                :max="MaxVolume"
                 orient="vertical"
                 type="range"
-                id="volume"
                 min="0"
-                value="%%VOLUME%%"
-                max="%%MAX_VOLUME%%"
                 step="3"
                 style="-webkit-appearance: slider-vertical;
                 width: 20px;
@@ -179,9 +163,127 @@
 </body>
 
 <script>
-volume.onchange = function() {
-    window.location.href = "/volume?value="+this.value;
-}
+var vm = new Vue({
+    el: "#app",
+    data: {
+        NowPlaying: "",
+        Volume: 0,
+        MaxVolume: 0,
+        Mode: "",
+        IsBabySafe: false,
+        IsRandomMode: false,
+        IsPlaying: false,
+        fetchInterval: 15,
+        Albums: [],
+        currentAlbum: "All"
+    },
+
+    methods: {
+        setCurrentState(data) {
+            this.NowPlaying = data.NowPlaying;
+            this.Volume = data.Volume;
+            this.MaxVolume = data.MaxVolume;
+            this.IsPlaying = data.IsPlaying;
+            this.IsBabySafe = data.IsBabySafe;
+            this.IsRandomMode = data.IsRandomMode;
+            this.Albums = data.Albums;
+            this.Mode = data.Mode;
+            console.log(data);
+        },
+        getCurrentState() {
+            if (document.hidden) {
+               return;
+            }
+            fetch("/state").then((res) => res.json()).then((data) => {
+                this.setCurrentState(data);
+            })
+        },
+        setAlbum() {
+            fetch("/album?value="+this.currentAlbum).then((res) => res.json()).then((data) => {
+                this.setCurrentState(data);
+            })
+        },
+        setVolume() {
+            fetch("/volume?value="+this.Volume).then((res) => res.json()).then((data) => {
+                this.setCurrentState(data);
+            })
+        },
+        skip() {
+            fetch("/skip").then((res) => res.json()).then((data) => {
+                this.setCurrentState(data);
+            })
+        },
+        toggleRandom() {
+            fetch("/random").then((res) => res.json()).then((data) => {
+                this.setCurrentState(data);
+            })
+        },
+        play() {
+            fetch("/play").then((res) => res.json()).then((data) => {
+                this.setCurrentState(data);
+            })
+        },
+        stop() {
+            fetch("/stop").then((res) => res.json()).then((data) => {
+                this.setCurrentState(data);
+            })
+        },
+        switchMode() {
+            let target = "/switch?type=";
+            if (this.Mode === "music") {
+                target = target + "waves"
+            } else {
+                target = target + "music"
+            }
+
+            fetch(target).then((res) => res.json()).then((data) => {
+                this.setCurrentState(data);
+            })
+        },
+        switchType() {
+            let target = "/switch?type=";
+            if (this.IsBabySafe) {
+                target = target + "grown-ups"
+            } else {
+                target = target + "baby"
+            }
+
+            fetch(target).then((res) => res.json()).then((data) => {
+                this.setCurrentState(data);
+            })
+        }
+    },
+
+    mounted() {
+        this.getCurrentState()
+        setInterval(() => {
+            this.getCurrentState();
+        }, this.fetchInterval * 1000);
+    }
+})
+</script>
+
+
+<script>
+// handle volume change event
+//volume.onchange = function() {
+//    window.location.href = "/volume?value="+this.value;
+//}
+
+// if we leave this tab and come back, refresh the page
+// document.addEventListener('visibilitychange', function(e) {
+//    if (!document.hidden) {
+//        window.location.reload();
+//    }
+//});
+
+// if we are sitting on this tab then let's refresh every 10 seconds so that things stay (mostly) up to date
+// setInterval(function() {
+//     if (document.hidden) {
+//        return;
+//    }
+//    window.location.reload();
+//}, 10 * 1000);
 </script>
 
 </html>
